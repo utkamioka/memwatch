@@ -1,0 +1,11 @@
+# /etc/cron.d/memwatch  (cron.d 形式: 実行ユーザー欄あり)
+# 他ユーザーのプロセスの PSS / FD 数を読むため root で実行してください
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=root
+
+# 1分ごとに収集 (systemd サービス "myapp" の例。--name / --pidfile 等でも可)
+* * * * *  root  /root/memwatch/memwatch.sh collect --service myapp --csv /var/log/memwatch/myapp.csv
+
+# 1時間ごとにグラフ更新＋リーク判定 (直近72時間。RSS が 1MB/時 以上で直線的に増えていたら警告 → syslog/メール)
+5 * * * *  root  /root/memwatch/memwatch.sh graph --csv /var/log/memwatch/myapp.csv -o /var/log/memwatch/myapp.html --hours 72 --warn-mb-per-hour 1 > /dev/null
