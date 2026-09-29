@@ -8,4 +8,5 @@ MAILTO=root
 * * * * *  root  /root/memwatch/memwatch.sh collect --service myapp --csv /var/log/memwatch/myapp.csv
 
 # 1時間ごとにグラフ更新＋リーク判定 (直近72時間。RSS が 1MB/時 以上で直線的に増えていたら警告 → syslog/メール)
-5 * * * *  root  /root/memwatch/memwatch.sh graph --csv /var/log/memwatch/myapp.csv -o /var/log/memwatch/myapp.html --hours 72 --warn-mb-per-hour 1 > /dev/null
+# （毎時１分なのは、0分ちょうどのcollectをグラフに反映させたいから）
+1 * * * *  root  /root/memwatch/memwatch.sh graph --csv /var/log/memwatch/myapp.csv -o /var/log/memwatch/myapp.html --hours 72 --warn-mb-per-hour 1 > /dev/null
